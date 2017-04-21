@@ -26,6 +26,15 @@ class RouteServiceProvider extends ServiceProvider
         //
 
         parent::boot();
+
+        array_map(function ($repoFile) {
+            $modelClassName = basename($repoFile, 'Repository.php');
+            $repositoryClass = '\\App\\Repositories\\' . $modelClassName . 'Repository';
+            $bindKey = 'repo_'.snake_case($modelClassName);
+            Route::bind($bindKey, function ($id) use ($repositoryClass) {
+                return new $repositoryClass($id);
+            });
+        }, glob(app_path('Repositories/*.php')));
     }
 
     /**

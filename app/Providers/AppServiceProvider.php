@@ -13,7 +13,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        array_map(function ($repoFile) {
+            $modelClassName = basename($repoFile, 'Repository.php');
+            $repositoryClass = '\\App\\Repositories\\' . $modelClassName . 'Repository';
+            $modelClass = '\\App\\Models\\' . $modelClassName;
+            if (class_exists($modelClass)) {
+                $modelClass::observe($repositoryClass);
+            }
+        }, glob(app_path('Repositories/*.php')));
     }
 
     /**
