@@ -2,7 +2,7 @@
 
 namespace App\Exceptions;
 
-class StaffException extends AppException
+class ProductException extends AppException
 {
     const ERR_EMPTY_NAME = 'ERR_EMPTY_NAME';
     const ERR_DUPLICATE_NAME = 'ERR_DUPLICATE_NAME';
