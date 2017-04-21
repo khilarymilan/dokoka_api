@@ -19,4 +19,9 @@ class ProductController extends Controller
             : response($repo_product->image, 200, ['Content-Type' => 'image/jpg'])
         );
     }
+
+    public function detail($product_id)
+    {
+        return (new ProductRepository)->detail($product_id);
+    }
 }
