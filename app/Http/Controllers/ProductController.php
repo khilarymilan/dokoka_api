@@ -14,6 +14,9 @@ class ProductController extends Controller
 
     public function image(ProductRepository $repo_product)
     {
-        dd($repo_product);
+        return ((!$repo_product->image)
+            ? response('', 404)
+            : response($repo_product->image, 200, ['Content-Type' => 'image/jpg'])
+        );
     }
 }
