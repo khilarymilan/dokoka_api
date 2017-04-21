@@ -27,4 +27,10 @@ class ProductRepository extends Repository
             @$input['entries_per_page']
         );
     }
+
+    public function detail($product_id = null)
+    {
+        return $this->model->join('branches', 'branches.id', '=', 'products.branch_id')->where('products.id', $product_id)->first();
+    }
+
 }

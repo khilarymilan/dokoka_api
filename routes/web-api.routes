@@ -7,5 +7,14 @@ GET  /list   *@list   product-list
 [product/{repo_product}  ProductController]
 GET  /image  *@image  product-image
 
+[product  ProductController]
+GET  /detail/{product_id} *@detail  product-detail
+
 [category  CategoryController]
 GET  /list   *@list   category-list]
+
+[store  StoreController]
+GET  /list  *@list   store-list]
+
+[branch  BranchController]
+GET  /list/{store_id}  *@list  branch-list
