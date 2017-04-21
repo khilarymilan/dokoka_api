@@ -9,7 +9,9 @@ class ProductRepository extends Repository
         return self::paginateSql(
             'getProductsList',
             [
-
+                'LATLNG' => @$input['latlng'],
+                'SEARCH_KEYWORDS' => @$input['search'],
+                'CATEGORY_ID' => @$input['category_id'],
             ],
             @$input['sort_by'],
             @$input['sort_ord'],

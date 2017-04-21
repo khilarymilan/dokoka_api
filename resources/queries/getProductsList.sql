@@ -16,7 +16,27 @@ SELECT
   branches.phone_number AS branch_address,
 
   stores.id AS store_id,
-  stores.name AS store_name
+  stores.name AS store_name,
+
+  -- CONCAT(products.name, ' ', products.details) AS `search_keywords`,
+
+  <?php
+  if (@$LATLNG) {
+    #list($FROM_LAT, $FROM_LNG) = explode(',', $LATLNG);
+    ?>
+    {{ LATLNG }}
+    /*
+    12734890 *
+    ASIN(SQRT(
+      POW(SIN((RADIANS(branches.latitude) - RADIANS( {{ FROM_LAT }} )) / 2), 2) +
+      COS(RADIANS( {{ FROM_LAT }} )) *
+      COS(RADIANS(branches.latitude)) *
+      POW(SIN((RADIANS(branches.longitude) - RADIANS( {{ FROM_LNG }} )) / 2), 2)
+    ));
+    */
+  <?php } else { ?>
+    0
+  <?php } ?> AS `distance`
 !!}
 
 FROM `products`
@@ -29,3 +49,13 @@ ON branches.id = products.branch_id
 
 JOIN `stores`
 ON stores.id = branches.store_id
+
+WHERE 1 = 1
+
+<?php if(@$CATEGORY_ID) { ?>
+  AND categories.id = {{ CATEGORY_ID }}
+<?php } ?>
+
+HAVING 1 = 1
+<?php if(@$SEARCH_KEYWORDS) { ?>
+<?php } ?>
