@@ -494,10 +494,22 @@ abstract class Repository
         $page_num = 1,
         $entries_per_page = 10
     ) {
-        $total_rows = (int)DB::select(self::sql(
+        $qry = self::qryAddSortPagination(
+            self::sql($sql_file, $arr_bindings),
+            $sort_by,
+            $sort_ord,
+            $page_num,
+            $entries_per_page
+        );
+
+        $rows = DB::select($qry);
+
+        $qry = self::sql(
             $sql_file,
             array_merge($arr_bindings, ['COLUMNS' => 'COUNT(*) AS `count`'])
-        ))[0]->count;
+        );
+
+        $total_rows = (int)DB::select($qry)[0]->count;
 
         $total_pages = $entries_per_page ? max(ceil($total_rows / $entries_per_page), 1) : 1;
 
@@ -507,13 +519,7 @@ abstract class Repository
             'page_num' => $page_num,
             'total_rows' => $total_rows,
             'total_pages' => $entries_per_page ? max(ceil($total_rows / $entries_per_page), 1) : 1,
-            'rows' => DB::select(self::qryAddSortPagination(
-                self::sql($sql_file, $arr_bindings),
-                $sort_by,
-                $sort_ord,
-                $page_num,
-                $entries_per_page
-            ))
+            'rows' => $rows
         ];
     }
 
