@@ -6,3 +6,6 @@ GET  /list   *@list   product-list
 
 [product/{repo_product}  ProductController]
 GET  /image  *@image  product-image
+
+[category  CategoryController]
+GET  /list   *@list   category-list]
