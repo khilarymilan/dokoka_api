@@ -1,5 +1,8 @@
 # [<prefix>(optional) <default_controller>(optional)]
 # <request_method|*(resource)> <path> <controller|*(default controller)>@method <alias>(optional)
 
+[]
+GET  /  ProductController@index  index-product
+
 [product  ProductController]
 GET  /  *@index  index-product
