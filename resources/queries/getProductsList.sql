@@ -12,7 +12,7 @@ SELECT
 {!! COLUMNS |
   products.name AS product_name,
   products.price AS product_price,
-  -- products.details AS product_details,
+  products.details AS product_details,
   products.available AS product_available,
 
   categories.id AS category_id,
@@ -20,8 +20,8 @@ SELECT
 
   branches.id AS branch_id,
   branches.name AS `branch_name`,
-  -- branches.description AS branch_description,
-  -- branches.address AS branch_address,
+  branches.description AS branch_description,
+  branches.address AS branch_address,
   branches.phone_number AS branch_phone_number,
 
   stores.id AS store_id,

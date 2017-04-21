@@ -32,5 +32,4 @@ class ProductRepository extends Repository
     {
         return $this->model->join('branches', 'branches.id', '=', 'products.branch_id')->where('products.id', $product_id)->first();
     }
-
 }
