@@ -10,6 +10,7 @@ $qryDistance =
 ?>
 SELECT
 {!! COLUMNS |
+  products.id AS product_id,
   products.name AS product_name,
   products.price AS product_price,
   products.details AS product_details,
