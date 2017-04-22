@@ -1,12 +1,23 @@
 <?php
-$qryDistance =
-  "12734890 *
-    ASIN(SQRT(
-      POW(SIN((RADIANS(branches.latitude) - RADIANS( {{ FROM_LAT }} )) / 2), 2) +
-      COS(RADIANS( {{ FROM_LAT }} )) *
-      COS(RADIANS(branches.latitude)) *
-      POW(SIN((RADIANS(branches.longitude) - RADIANS( {{ FROM_LNG }} )) / 2), 2)
-    ))";
+$qryDistance = (
+  @$LATLNG
+    ? "12734890 *
+      ASIN(SQRT(
+        POW(SIN((RADIANS(branches.latitude) - RADIANS( {{ FROM_LAT }} )) / 2), 2) +
+        COS(RADIANS( {{ FROM_LAT }} )) *
+        COS(RADIANS(branches.latitude)) *
+        POW(SIN((RADIANS(branches.longitude) - RADIANS( {{ FROM_LNG }} )) / 2), 2)
+      ))"
+    : 'NULL'
+);
+
+$qrySearchRelevance = (
+  @$SEARCH_KEYWORDS
+    ? implode('+', array_map(function($kw) {
+        return "(CONCAT(products.name, ' ', products.details) REGEXP ('{$kw}'))";
+      }, array_unique(preg_split('/[\s\|\/]+/', $SEARCH_KEYWORDS, -1, PREG_SPLIT_NO_EMPTY))))
+    : 1
+);
 ?>
 SELECT
 {!! COLUMNS |
@@ -28,7 +39,9 @@ SELECT
   stores.id AS store_id,
   stores.name AS store_name,
 
-  <?php echo @$LATLNG ? $qryDistance : 'NULL' ?> AS `distance`
+  <?php echo (@$LATLNG ? $qryDistance : 'NULL') ?> AS `distance`,
+
+  <?php echo $qrySearchRelevance ?> AS `relevance`
 !!}
 
 FROM `products`
@@ -42,9 +55,7 @@ ON branches.id = products.branch_id
 JOIN `stores`
 ON stores.id = branches.store_id
 
-WHERE 1 = 1
-
-  AND products.available >= 1
+WHERE products.available >= 1
 
 <?php if (@$LATLNG && !@$PRODUCT_ID) { ?>
   AND <?php echo $qryDistance ?> <= 1000
@@ -54,9 +65,11 @@ WHERE 1 = 1
   AND categories.id = {{ CATEGORY_ID }}
 <?php } ?>
 
-<?php if(@$SEARCH_KEYWORDS) { ?>
-  AND CONCAT(products.name, ' ', products.details) REGEXP ('(<?php echo implode(")|(", preg_split('/[\s\|\/]+/', $SEARCH_KEYWORDS)) ?>)')
-<?php } ?>
+<?php if(@$SEARCH_KEYWORDS) {
+  ?>
+  AND <?php echo $qrySearchRelevance ?> > 0
+  <?php
+} ?>
 
 <?php if(@$PRODUCT_ID) { ?>
   AND products.id = {{ PRODUCT_ID }}
