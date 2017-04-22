@@ -6,10 +6,17 @@ class ProductRepository extends Repository
 {
     public function list($input = [])
     {
-        $from_lat = $from_lng = null;
+        $latlng = $from_lat = $from_lng = null;
 
-        if (@$input['latlng']) {
-            list($from_lat, $from_lng) = explode(',', @$input['latlng']);
+        if (@$input['location']) {
+            $latlng = json_decode(file_get_contents(
+                'https://maps.googleapis.com/maps/api/geocode/json?address=' .
+                urlencode($input['location']) .
+                '&key=AIzaSyAqu354Ybp1UTNsas5RrWmn16ymBnh4Dv0'
+            ), true);
+            $latlng = $latlng['results'][0]['geometry']['location'];
+            $from_lat = $latlng['lat'];
+            $from_lng = $latlng['lng'];
         }
 
         return self::paginateSql(
@@ -17,9 +24,11 @@ class ProductRepository extends Repository
             [
                 'FROM_LAT' => $from_lat,
                 'FROM_LNG' => $from_lng,
-                'LATLNG' => @$input['latlng'],
+                'LATLNG' => $latlng,
                 'SEARCH_KEYWORDS' => @$input['search'],
                 'CATEGORY_ID' => @$input['category_id'],
+                'PRICE_MIN' => @$input['price_min'],
+                'PRICE_MAX' => @$input['price_max'],
             ],
             @$input['sort_by'],
             @$input['sort_ord'],
@@ -30,10 +39,17 @@ class ProductRepository extends Repository
 
     public function detail($product_id = null, $input = [])
     {
-        $from_lat = $from_lng = null;
+        $latlng = $from_lat = $from_lng = null;
 
-        if (@$input['latlng']) {
-            list($from_lat, $from_lng) = explode(',', @$input['latlng']);
+        if (@$input['location']) {
+            $latlng = json_decode(file_get_contents(
+                'https://maps.googleapis.com/maps/api/geocode/json?address=' .
+                urlencode($input['location']) .
+                '&key=AIzaSyAqu354Ybp1UTNsas5RrWmn16ymBnh4Dv0'
+            ), true);
+            $latlng = $latlng['results'][0]['geometry']['location'];
+            $from_lat = $latlng['lat'];
+            $from_lng = $latlng['lng'];
         }
 
         return self::selectSql(
@@ -42,7 +58,7 @@ class ProductRepository extends Repository
                 'PRODUCT_ID' => $product_id,
                 'FROM_LAT' => $from_lat,
                 'FROM_LNG' => $from_lng,
-                'LATLNG' => @$input['latlng'],
+                'LATLNG' => $latlng,
             ]
         );
     }

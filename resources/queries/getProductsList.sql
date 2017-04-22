@@ -61,3 +61,11 @@ WHERE 1 = 1
 <?php if(@$PRODUCT_ID) { ?>
   AND products.id = {{ PRODUCT_ID }}
 <?php } ?>
+
+<?php if(@$PRICE_MIN) { ?>
+  AND products.price >= {{ PRICE_MIN }}
+<?php } ?>
+
+<?php if(@$PRICE_MAX) { ?>
+  AND products.price <= {{ PRICE_MAX }}
+<?php } ?>
