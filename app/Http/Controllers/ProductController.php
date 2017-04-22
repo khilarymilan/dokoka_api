@@ -20,8 +20,8 @@ class ProductController extends Controller
         );
     }
 
-    public function detail($product_id)
+    public function detail(Request $request, $product_id)
     {
-        return (new ProductRepository)->detail($product_id);
+        return (new ProductRepository)->detail($product_id, $request->input());
     }
 }

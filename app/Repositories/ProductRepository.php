@@ -8,7 +8,7 @@ class ProductRepository extends Repository
     {
         $from_lat = $from_lng = null;
 
-        if(@$input['latlng']) {
+        if (@$input['latlng']) {
             list($from_lat, $from_lng) = explode(',', @$input['latlng']);
         }
 
@@ -28,8 +28,22 @@ class ProductRepository extends Repository
         );
     }
 
-    public function detail($product_id = null)
+    public function detail($product_id = null, $input = [])
     {
-        return $this->model->join('branches', 'branches.id', '=', 'products.branch_id')->where('products.id', $product_id)->first();
+        $from_lat = $from_lng = null;
+
+        if (@$input['latlng']) {
+            list($from_lat, $from_lng) = explode(',', @$input['latlng']);
+        }
+
+        return self::selectSql(
+            'getProductsList',
+            [
+                'PRODUCT_ID' => $product_id,
+                'FROM_LAT' => $from_lat,
+                'FROM_LNG' => $from_lng,
+                'LATLNG' => @$input['latlng'],
+            ]
+        );
     }
 }

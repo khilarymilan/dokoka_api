@@ -8,7 +8,7 @@ GET  /list                 *@list    product-list
 GET  /image                *@image   product-image
 
 [product  ProductController]
-GET  /detail/{product_id}  *@detail  product-detail
+GET  /{product_id}/detail  *@detail  product-detail
 
 [category  CategoryController]
 GET  /list                 *@list    category-list]

@@ -44,7 +44,7 @@ ON stores.id = branches.store_id
 
 WHERE 1 = 1
 
-<?php if (@$LATLNG) { ?>
+<?php if (@$LATLNG && !@$PRODUCT_ID) { ?>
   AND <?php echo $qryDistance ?> <= 1000
 <?php } ?>
 
@@ -54,4 +54,8 @@ WHERE 1 = 1
 
 <?php if(@$SEARCH_KEYWORDS) { ?>
   AND CONCAT(products.name, ' ', products.details) REGEXP ('(<?php echo implode(")|(", preg_split('/[\s\|\/]+/', $SEARCH_KEYWORDS)) ?>)')
+<?php } ?>
+
+<?php if(@$PRODUCT_ID) { ?>
+  AND products.id = {{ PRODUCT_ID }}
 <?php } ?>
