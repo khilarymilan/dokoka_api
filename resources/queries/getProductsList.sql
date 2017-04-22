@@ -44,6 +44,8 @@ ON stores.id = branches.store_id
 
 WHERE 1 = 1
 
+  AND products.available >= 1
+
 <?php if (@$LATLNG && !@$PRODUCT_ID) { ?>
   AND <?php echo $qryDistance ?> <= 1000
 <?php } ?>
