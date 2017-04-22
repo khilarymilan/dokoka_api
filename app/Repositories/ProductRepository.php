@@ -30,8 +30,8 @@ class ProductRepository extends Repository
                 'PRICE_MIN' => @$input['price_min'],
                 'PRICE_MAX' => @$input['price_max'],
             ],
-            @$input['sort_by'],
-            @$input['sort_ord'],
+            @$input['sort_by'] ?: 'relevance',
+            @$input['sort_ord'] ?: 'desc',
             @$input['page_num'],
             @$input['entries_per_page']
         );
